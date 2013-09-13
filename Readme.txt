@@ -120,8 +120,10 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 1. Default table style
 2. Custom color
-3. Another Color
-
+3. Hover style
+4. Yes
+5. Ok
+6. Cool
 
 == Changelog ==
 
