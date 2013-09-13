@@ -120,8 +120,10 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 1. Default table style
 2. Custom color
-3. Another Color
-
+3. Hover style
+4. Another Style hovered
+5. Pricing table with custom font
+6. 3 columns
 
 == Changelog ==
 
