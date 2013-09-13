@@ -1,0 +1,21 @@
+.addpricingcolumn {
+color: #fff;
+background: #990000;
+font-weight: bold;
+}
+
+.parentsinglecol, .parentsinglecolnew  {
+padding: 10px;
+background: #f1e919;
+margin: 5px 5px 5px 0;
+border-radius: 5px;
+width: 340px;
+}
+
+label {
+
+}
+
+input {
+
+}
