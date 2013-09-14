@@ -107,7 +107,7 @@ function enqueue_indtable_ajax($hook) {
   if (is_admin() && $typenow=='indtable') {
     if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
 
-    wp_enqueue_script( 'indtable_ajax_script', plugins_url('/ind_css3_responsive_pricing_table/js/indajax.js'),
+    wp_enqueue_script( 'indtable_ajax_script', plugins_url('/ind_css3_pricing_table/js/indajax.js'),
 		array('jquery'));
 	wp_localize_script('indtable_ajax_script', 'indtable_ajax_script_vars', array (
 	'ind_ajax_nonce' => 'wp_create_nonce("ind-nonce-string")'
