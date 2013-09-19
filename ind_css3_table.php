@@ -4,7 +4,7 @@ Plugin Name: IND Pricing Table
 Plugin URI: http://www.ctuts.com/
 Description: CSS3 Pricing Table Generator For Wordpress
 Author: Ari Susanto
-Version: 1.0
+Version: 2.0
 Author URI: http://ctuts.com
 Copyright 2013  ARI SUSANTO  (email : admin@ctuts.com)
 */
