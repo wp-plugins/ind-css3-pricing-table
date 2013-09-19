@@ -1,0 +1,43 @@
+.addpricingcolumn {
+color: #fff;
+background: #990000;
+font-weight: bold;
+}
+
+.parentsinglecol, .parentsinglecolnew  {
+padding: 10px;
+background: #f1e919;
+margin: 5px 5px 5px 0;
+border-radius: 5px;
+width: 340px;
+}
+
+label {
+
+}
+
+input {
+
+}
+
+
+input.wp-color-picker  {
+z-index: 999 !important;
+/*position: absolute !important;*/
+margin-top: -1px;
+margin-left: 0px;
+width: 60px;
+}
+
+.wp-picker-clear,
+div.wp-picker-holder {
+z-index: 999 !important;
+position: absolute !important;
+}
+
+button[value=clear] {
+color: #990000;
+}
+div.wp-picker-holder {
+margin-top: -275px;
+}
