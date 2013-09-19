@@ -4,7 +4,7 @@ Donate link: http://ctuts.com/contact/
 Tags: pricing table, css3, table, pricing, shortcode
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.0
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,9 +127,13 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 == Changelog ==
 
+= 2.0 - 19 September 2013 =
+- Add color option for each column
+- Fix saving problem
+
 = 1.0 - 13 September 2013 =
 Release notes.
 
 
 == Upgrade Notice ==
-This section is currently empty. 
+- Add ability to differentiate color for each column on version 2.0.

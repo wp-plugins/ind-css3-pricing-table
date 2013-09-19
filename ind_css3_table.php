@@ -4,7 +4,7 @@ Plugin Name: IND Pricing Table
 Plugin URI: http://www.ctuts.com/
 Description: CSS3 Pricing Table Generator For Wordpress
 Author: Ari Susanto
-Version: 1.0
+Version: 2.0
 Author URI: http://ctuts.com
 Copyright 2013  ARI SUSANTO  (email : admin@ctuts.com)
 */
@@ -13,6 +13,8 @@ register_activation_hook(__FILE__, 'indtable_activation_function');
 add_action('admin_init', 'indtable_info_docpage');
 
 function indtable_activation_function() {
+	ind_pricing_table_table();
+    flush_rewrite_rules();
     add_option('indtable_redirection_page', true);
 }
 
@@ -26,8 +28,9 @@ function indtable_info_docpage() {
 register_deactivation_hook('_FILE_', 'ind_table_deactivation_function'); 
 function ind_table_deactivation_function() {
  delete_option('indtable_redirection_page');
+ 	flush_rewrite_rules();
 }
-
+add_action( 'init', 'ind_pricing_table_table' );
 function ind_pricing_table_table() {
 
 	$labels = array(
@@ -117,6 +120,39 @@ function enqueue_indtable_ajax($hook) {
 //	wp_enqueue_script('indtable_ajax_script');
 }
 
+function enqueue_indtable_jquery_colorPicker_min($hook) {
+  global $pagenow, $typenow;
+
+  if (empty($typenow) && !empty($_GET['post'])) {
+    $post = get_post($_GET['post']);
+    $typenow = $post->post_type;
+  }
+  if (is_admin() && $typenow=='indtable') {
+    if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
+
+    wp_enqueue_script( 'indtable_jquery_colorPicker_minscript', plugins_url('/ind_css3_pricing_table/js/jquery.minicolors.min.js'),
+		array('jquery'));
+	}
+	}
+}
+
+function enqueue_indtable_jquery_colorPicker($hook) {
+  global $pagenow, $typenow;
+
+  if (empty($typenow) && !empty($_GET['post'])) {
+    $post = get_post($_GET['post']);
+    $typenow = $post->post_type;
+  }
+  if (is_admin() && $typenow=='indtable') {
+    if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
+
+    wp_enqueue_script( 'indtable_jquery_colorPicker_script', plugins_url('/ind_css3_pricing_table/js/jquery.minicolors.js'),
+		array('jquery'));
+	}
+	}
+}
+
+
 add_filter( 'enter_title_here', 'ind_table_custom_post_title' );
 
 function ind_table_custom_post_title( $input ) {
@@ -190,9 +226,23 @@ function ind_pricingtable_doc_info() {
 
 
 function enqueue_indtable_style( $hook ) {
-/*if( 'post.php?post_type=indtable' != $hook && 'post-new.php?post_type=indtable' != $hook && 'edit.php?post_type=indtable&page=documentation' != $hook) return;*/
+  global $pagenow, $typenow;
+
+  if (empty($typenow) && !empty($_GET['post'])) {
+    $post = get_post($_GET['post']);
+    $typenow = $post->post_type;
+  }
+  if (is_admin() && $typenow=='indtable') {
+    if ($pagenow=='post-new.php' || $pagenow=='post.php') {
     wp_register_style( 'indtable_ajax_style', plugins_url('/ind_css3_pricing_table/css/admin.css') );
 	wp_enqueue_style('indtable_ajax_style');
+	}
+  }
+}
+
+function enqueue_indtable_latex_style( $hook ) {
+    wp_register_style( 'indtable_latex_style', plugins_url('/ind_css3_pricing_table/css/jquery.minicolors.css') );
+	wp_enqueue_style('indtable_latex_style');
 }
 
 function front_end_table_style() {
@@ -213,7 +263,7 @@ global $post;
 wp_nonce_field( 'ind_table_metabox_form', 'ind_table_metabox_nonce' );
 $counter = get_post_meta($post->ID, 'indtable_counter_key', true);
 			echo "<div style='float:left;'><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EQCY34XEX6JAA&lc=ID&item_name=IND%20Pricing%20Table%20Plugin%20Development&no_note=1&no_shipping=1&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted' target='_blank'><b> Keep Me Online?</b></a>";
-			echo "<br/>Need Help With Wordpress? <a href='mailto:atblogad1@gmail.com?Subject=Need%20Help%20WIth%20Wordpress' target='_top'>Contact Me!</a></div>";
+			echo "<br/> <a style='color:#990000;' href='http://codecanyon.net/popular_item/by_category?category=wordpress&ref=kingpinggold' target='_blank'>Browse More Amazing WP Plugins!</a></div>";			
 			echo "<div style='float: right;'>&nbsp;<i><u>Shortcode:</u></i><br/>";
 			echo "<b><input onfocus='this.select()' type='text'";
 			echo "style='width: 170px;'";
@@ -226,6 +276,7 @@ $counter = get_post_meta($post->ID, 'indtable_counter_key', true);
 $ctatextval = get_post_meta($post->ID, 'ctatitletext_meta_key', true);
 $indfeatnameval = get_post_meta($post->ID, 'ind_featurename_meta_key', true);
 ?>
+
 <h3><b>Parent Column</b></h3>
 <table id="ctafeaturename">
 <tbody>
@@ -267,7 +318,7 @@ endif;
 <input type="hidden" name="countnumbtbody" class="counter" value="<?php if ($counter != '') : echo $counter; else : echo 1; endif; ?>" />
 <input type="hidden" name="postid" class="postidclass" value="<?php echo $post->ID; ?>" />
 <button class="removelastcolumn">Remove Column</button>
-<br/>
+<br/><br/>
 <div style="display: none; class="loading" id ="ind_loading"> <b>Processing...</b> <br/> <img src="<?php echo plugins_url('/ind_css3_pricing_table/img/ajax-loader.gif');?>" margin: 10px 0 0 0;"/></div>
 <table id="parenttable">
 
@@ -293,22 +344,18 @@ $indpriceval = get_post_meta($post->ID, $indpricekey, true);
 $indpricelabelval = get_post_meta($post->ID, $indpricelabelkey, true);
 $indfeatureval = get_post_meta($post->ID, $indfeaturekey, true);
 $indbuttonval = get_post_meta($post->ID, $indbuttonkey, true);
-
 ?>
 <tbody class="columnstobecloned">
 <?php
 //if ($indplanval || $indfeatureval || $indpriceval) {
 ?>
-
 <?php
-//}
 //Plan
 if ($indplanval){
 ?>
-<tr><td><hr></td></tr>
-<tr>
-<td><b>Plan :</b></td><td><input type="text" name="plan<?php echo $cr; ?>" value="<?php if ($indplanval != '') echo $indplanval; ?>"/></td><td><i>ribbon :</i> <select name="indribbon<?php echo $cr; ?>">
-  <option <?php if ($indribbonval) echo "selected = 'selected'" ?>><?php if ($indribbonval) echo $indribbonval; ?></option>
+<tr class='indcolmnamer'><td><?php if($cr>1): ?><br/><?php endif; ?><b><u>Column <?php echo $cr; ?></u></b></td></tr>
+<tr><td><b>Plan :</b></td><td><input type="text" name="plan<?php echo $cr; ?>" value="<?php if ($indplanval != '') echo $indplanval; ?>"/></td><td><i>ribbon :</i> <select name="indribbon<?php echo $cr; ?>">
+  <option <?php if ($indribbonval) echo "selected = 'selected'"; ?> style='display:none;'><?php if ($indribbonval) echo $indribbonval; ?></option>
 <option>None</option>
 <option>FivetyPercent</option>
 <option>SeventyFivePercent</option>
@@ -324,9 +371,10 @@ if ($indplanval){
 <?php
 } else {
 ?>
-<tr><td><hr></td></tr>
+<tr class='indcolmnamer'><td><?php if($cr>1): ?><br/><?php endif; ?><b><u>Column <?php echo $cr; ?></u></b></td></tr>
 <tr>
-<td><b>Plan :</b></td><td><input type="text" name="plan<?php echo $cr; ?>" value="" placeholder="Plan's name"/></td><td><i>ribbon :</i> <select name="indribbon<?php echo $cr; ?>" value="Coffee">
+<td><b>Plan :</b></td><td><input type="text" name="plan<?php echo $cr; ?>" value="" placeholder="Plan's name"/></td><td><i>ribbon :</i> <select name="indribbon<?php echo $cr; ?>" value="">
+<option <?php if ($indribbonval) echo "selected = 'selected'"; ?> style='display:none;'><?php if ($indribbonval) echo $indribbonval; ?></option>
 <option>None</option>
 <option>FivetyPercent</option>
 <option>SeventyFivePercent</option>
@@ -346,13 +394,13 @@ if ($indplanval){
 if ($indpriceval){
 ?>
 <tr>
-<td><b>Price :</b></td><td><input type="text" name="price<?php echo $cr; ?>" value="<?php if ($indpriceval != '') echo $indpriceval; ?>"/></td><td><i> - </i><input style="" type="text" name="pricelabel<?php echo $cr; ?>" <?php if ($indpricelabelval) : echo "value ='" . $indpricelabelval . "'";  else : ?> value="" placeholder="subscription period" <?php endif; ?> /></td>
+<td><b>Price :</b></td><td><input type="text" name="price<?php echo $cr; ?>" value="<?php if ($indpriceval != '') echo $indpriceval; ?>"/></td><td><i> - </i><input style="" type="text" name="subslabel<?php echo $cr; ?>" <?php if ($indpricelabelval) : echo "value ='" . $indpricelabelval . "'";  else : ?> value="" placeholder="subscription period" <?php endif; ?> /></td>
 </tr>
 <?php
 } else {
 ?>
 <tr>
-<td><b>Price :</b></td><td><input type="text" name="price<?php echo $cr; ?>" value="" placeholder="Package's price"/></td><td><i> - </i><input style="" type="text" name="pricelabel<?php echo $cr; ?>" value="<?php ?>" placeholder="subscription period" /></td>
+<td><b>Price :</b></td><td><input type="text" name="price<?php echo $cr; ?>" value="" placeholder="Package's price"/></td><td><i> - </i><input style="" type="text" name="subslabel<?php echo $cr; ?>" value="<?php ?>" placeholder="subscription period" /></td>
 </tr>
 <?php
 }
@@ -385,7 +433,6 @@ foreach ($indbuttonval as $indbutton) {
 <td><b>Button :</b></td><td><input type="text" name="buttontext<?php echo $cr; ?>[]" value="<?php if($indbutton['buttontext'.$cr] != '') echo $indbutton['buttontext'.$cr]; ?>" placeholder="Button text" /></td>
 <td><input type="text" name="buttonurls<?php echo $cr; ?>[]" value="<?php if($indbutton['buttonurls'.$cr] != '')  echo $indbutton['buttonurls'.$cr]; ?>" placeholder="http://example.com/" /></td>
 </tr>
-
 <?php
 }
 } else {
@@ -404,7 +451,7 @@ foreach ($indbuttonval as $indbutton) {
 $ic = 1;
 ?>
 <tbody class="openingcolumn" >
-<tr><td><hr></td></tr>
+<tr class='indcolmnamer'><td><b><u>Column <?php echo $ic;?></u></b></td></tr>
 <tr>
 <td><b>Plan :</b></td><td><input type="text" name="plan<?php echo $ic;?>" value=""/></td><td><i>ribbon :</i> <select name="indribbon<?php echo $ic; ?>">
 <option>None</option>
@@ -420,7 +467,7 @@ $ic = 1;
 </select></td>
 </tr>
 <tr>
-<td><b>Price :</b></td><td><input type="text" name="price<?php echo $ic;?>" value=""/></td><td><i> - </i><input style="" type="text" name="pricelabel<?php echo $ic; ?>" value="<?php ?>" placeholder="subscription period" /></td>
+<td><b>Price :</b></td><td><input type="text" name="price<?php echo $ic;?>" value=""/></td><td><i> - </i><input style="" type="text" name="subslabel<?php echo $ic; ?>" value="<?php ?>" placeholder="subscription period" /></td>
 </tr>
 <?php
 ?>
@@ -469,10 +516,33 @@ $indbuttontext_color = get_post_meta($post->ID, 'indbuttontext_color_meta_key', 
 ?>
 </table>
 <br/>
-<h3><b>Table Color and Layout</b></h3>
+<h3 id='colmcolrfieldname'><b>Table Color and Layout</b></h3>
+<?php // Color Picker
+if ($inc>=1) :
+?>
 <br/>
-<?php // Color Picker ?>
 <table>
+<tr><td><b><u>COLUMNs COLOR</u></b></td></tr>
+<?php
+for ($i=1;$i<=$inc;$i++) {
+$ccdt = 'colcolm_diff_top_key'.$i;
+$ccdb = 'colcolm_diff_bottom_key'.$i;
+$ccdtop = get_post_meta($post->ID, $ccdt, true);
+$ccdbottom = get_post_meta($post->ID, $ccdb, true);
+?>
+<tbody class="colmnname"><tr><td><br/><b>Column <?php echo $i; ?> color</b></td></tr></tbody>
+<tbody class="colmnecolor">
+<td>top gradient: <br/> <input type="text" name="colmcolordiftop<?php echo $i; ?>" class="colmcolordiftop" value="<?php if ($ccdtop) : echo $ccdtop; endif; ?>" /></td><td> bottom gradient<br/> <input type="text" name="colmcolordifbottom<?php echo $i; ?>" class="colmcolordifbottom" value="<?php if ($ccdbottom) : echo $ccdbottom; endif; ?>" /></td></tr>
+</tbody>
+<?php
+}
+?>
+</table>
+<?php
+endif;
+?>
+<table>
+<tr><td><hr></td></tr>
 <tr><td><b>BACKGROUND GRADIENT</b></td></tr>
 <tr>
 <td><label>top:</label></td><td><input name="indplanbgtop_color" type="text" id="indplanbgtop_color" value="<?php if ($bggradtop != '') echo $bggradtop; ?>" data-default-color=""/></td></tr>
@@ -578,8 +648,12 @@ $indplan = sanitize_text_field($_POST['plan'.$c]);
 $pricekey = 'indprice_meta_key'.$c;
 $pricelabelkey = 'indpricelabel_meta_key'.$c;
 $ribbonlogo = sanitize_text_field($_POST['indribbon'.$c]);
-$indpricelabel = sanitize_text_field($_POST['pricelabel'.$c]);
+$indpricelabel = $_POST['subslabel'.$c];
 $indprice = sanitize_text_field($_POST['price'.$c]);
+$ccdt = 'colcolm_diff_top_key'.$c;
+$ccdb = 'colcolm_diff_bottom_key'.$c;
+$colmcolordiftop = $_POST['colmcolordiftop'.$c];
+$colmcolordifbottom = $_POST['colmcolordifbottom'.$c];
 $indbuttonkey = 'indbutton_meta_key'.$c;
 $oldbutton = get_post_meta($post_id, $indbuttonkey, true);
 $newbutton = array();
@@ -591,14 +665,43 @@ $old = get_post_meta($post_id, $featurekey, true);
 $new = array();
 $feature = $_POST['feature'.$c];
 $count = count( $feature );
+
 if ($indplan != '') :
 update_post_meta($post_id, $plankey, $indplan);
 else :
 delete_post_meta($post_id, $plankey, $indplan);
 endif;
+
+if ($indprice != '') :
 update_post_meta($post_id, $pricekey, $indprice);
+else :
+delete_post_meta($post_id, $pricekey, $indprice);
+endif;
+
+if($colmcolordiftop != '') :
+update_post_meta($post_id, $ccdt, $colmcolordiftop);
+else :
+delete_post_meta($post_id, $ccdt, $colmcolordiftop);
+endif;
+
+if($colmcolordifbottom != '') :
+update_post_meta($post_id, $ccdb, $colmcolordifbottom);
+else :
+delete_post_meta($post_id, $ccdb, $colmcolordifbottom);
+endif;
+
+if($ribbonlogo != '') :
 update_post_meta($post_id, $planribbon, $ribbonlogo);
+else :
+delete_post_meta($post_id, $planribbon, $ribbonlogo);
+endif;
+
+if($indpricelabel != '') :
 update_post_meta($post_id, $pricelabelkey, $indpricelabel);
+else :
+delete_post_meta($post_id, $pricelabelkey, $indpricelabel);
+endif;
+
 	for ( $y = 0; $y < $countbutton; $y++ ) {
 		if ( $buttontext[$y] != '' ) :
 			$newbutton[$y]['buttontext'.$c] = stripslashes( strip_tags( $buttontext[$y] ) );
@@ -655,6 +758,7 @@ $indbuttonbgtophover_color = $_POST['indbuttonbgtophover_color'];
 $indbuttonbgbottomhover_color = $_POST['indbuttonbgbottomhover_color'];
 $indbuttontext_color = $_POST['indbuttontext_color'];
 $indfontfamily = $_POST['indfontfamily'];
+
 
 if ($indfontfamily != '') :
 update_post_meta($post_id, 'indfontfamily_meta_key', $indfontfamily);
@@ -843,9 +947,9 @@ $increment = get_post_meta($id, 'indtable_counter_key', true);
 ($increment != '') ?  $incrent = $increment : $incrent = 1 ;
 $ctatextval = get_post_meta($id, 'ctatitletext_meta_key', true);
 $indfeatnameval = get_post_meta($id, 'ind_featurename_meta_key', true);
-$url = plugins_url();
-$path = '/ind_css3_pricing_table/img/';
+
 include_once("/css/indstyle.php");
+include_once("/css/colmcolrs.php");
 //$indtableshow = "<center>";
 $indtableshow = "<div id='parenttable'>";
 
@@ -886,8 +990,22 @@ $indpriceval = get_post_meta($id, $indpricekey, true);
 $indpricelabelval = get_post_meta($id, $indpricelabelkey, true);
 $indfeatureval = get_post_meta($id, $indfeaturekey, true);
 $indbuttonval = get_post_meta($id, $indbuttonkey, true);
+
+if ($indribbonval != 'None') :
+$url = plugins_url();
+$path = '/ind_css3_pricing_table/img/';
+else :
+$url = '';
+$path = '';
+endif;
+
 $indtableshow .= "<div class='innertablecolumns'><div class='truecolind'>";
-$indtableshow .= "<div id='indwrapequally2'><div class='indimageribbon'><img src='".$url.$path.$indribbonval.".gif'/></div>";
+$indtableshow .= "<div id='indwrapequally2'>";
+
+if ($indribbonval != 'None') :
+$indtableshow .= "<div class='indimageribbon'><img src='".$url.$path.$indribbonval.".gif'/></div>";
+endif;
+
 if ($indplanval) :
 $indtableshow .= "<div class='indplan'><p>" . $indplanval  . "</p>";
 $indtableshow .= "</div>";
@@ -929,7 +1047,10 @@ if (is_admin()) :
 add_action( 'init', 'ind_pricing_table_table', 0 );
 //add_action('admin_enqueue_scripts', 'ind_load_wpjquery');
 add_action( 'admin_enqueue_scripts', 'enqueue_indtable_ajax' );
+add_action('admin_enqueue_scripts', 'enqueue_indtable_jquery_colorPicker_min');
+add_action('admin_enqueue_scripts', 'enqueue_indtable_jquery_colorPicker');
 add_action( 'admin_enqueue_scripts', 'enqueue_indtable_style' );
+add_action( 'admin_enqueue_scripts', 'enqueue_indtable_latex_style' );
 add_action('add_meta_boxes', 'indtable_meta_hook');
 add_filter( 'manage_edit-indtable_columns', 'wp_edit_indtable_columns' );
 add_action( 'manage_indtable_posts_custom_column', 'wp_manage_indtable_columns', 10, 2 );

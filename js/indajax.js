@@ -21,6 +21,12 @@ $('.removelastcolumn').hide();
 $('.removelastcolumn').show();
 }
 
+
+$(".inddismiss").on("click", function(event){
+event.preventDefault();
+$(this).closest('p').remove();
+});
+
 // Clone tbody
 $(".addpricingcolumn").on("click", function(event){
 event.preventDefault();
@@ -29,15 +35,25 @@ $("#ind_loading").show();
 	var number = $("#parenttable").find("input[name*='plan']").length;
 	$('.counter').val(number*1+1);
 	var showrmv = $('.counter').val();
-	var addcol = $("#parenttable tbody:first").clone(true);
+	var addcol = $("#parenttable tbody:last").clone(true);
 	var incr = $("#parenttable").find("input[name*='plan']").length+1;
-	var newplan = addcol.find("input[name*='plan1']").attr({'name':'plan'+incr});
-	var newprice = addcol.find("input[name*='price1']").attr({'name':'price'+incr});
-	var newfeature = addcol.find("input[name*='feature1[]']").attr({'name':'feature'+incr+'[]'});
-	var newtext = addcol.find("input[name*='buttontext1']").attr({'name':'buttontext'+incr+'[]'});
-	var newurl = addcol.find("input[name*='buttonurl']").attr({'name':'buttonurls'+incr+'[]'});
+	var newplan = addcol.find("input[name*='plan']").attr({'name':'plan'+incr});
+var newribbon = addcol.find("select[name*='indribbon']").attr({'name':'indribbon'+incr});
+	/*	var newclot = addcol.find("input[name*='colmcolordiftop']").attr({'name':'colmcolordiftop'+incr});
+	var newclob = addcol.find("input[name*='colmcolordifbottom']").attr({'name':'colmcolordifbottom'+incr});*/
+	var newprice = addcol.find("input[name*='price']").attr({'name':'price'+incr});
+	var newfeature = addcol.find("input[name*='feature']").attr({'name':'feature'+incr+'[]'});
+	var newtext = addcol.find("input[name*='buttontext']").attr({'name':'buttontext'+incr+'[]'});
+	var newurl = addcol.find("input[name*='buttonurls']").attr({'name':'buttonurls'+incr+'[]'});
+	var newpricelabel = addcol.find("input[name*='subslabel']").attr({'name':'subslabel'+incr});
+		var newcolnamer = addcol.find('.indcolmnamer').html('<td><br/><b><u><b>Column '+incr+'</u></b></td>');
 	addcol.removeClass('columnstobecloned openingcolumn');
 	addcol.addClass('columnstoberemoved');
+	$( "<p class='messager-line' style='background:yellow;'>Please <button>click here</button> to show the color option for the column number <b>"+incr+"</b>!&nbsp<a title='Dismiss' href='' class='inddismiss' style='text-decoration:none;border:2px solid #000;padding:0 3px 0 3px;float:right;'>X</a>&nbsp" ).insertAfter("#colmcolrfieldname");
+		$('.inddismiss').click(function(e) {
+	e.preventDefault();
+	$(this).closest('p').remove();
+	});
 	var pid = $('.postidclass').val();
 	var data = {
 		action: 'ind_save_ajax',
@@ -52,7 +68,11 @@ $("#ind_loading").show();
 $('.removelastcolumn').show();
 }
 $("#ind_loading").hide();
-addcol.insertAfter("#parenttable tbody:last").newplan.newprice.newfeature.newtext.newurl;
+	for (var i=0; i<=number; i++) {
+	var y = $('.colmcolordiftop'+i);
+	y.wpColorPicker();
+}
+addcol.insertAfter("#parenttable tbody:last").newcolnamer.newplan.newribbon.newpricelabel.newprice.newfeature.newtext.newurl;
 });
 });
 
@@ -63,6 +83,8 @@ $("#ind_loading").show();
 	var psid = $('.postidclass').val();
 	var decounting = $('.counter').val();
 	$('.counter').val(decounting*1-1);
+	var number = $("#parenttable").find("input[name*='plan']").length;
+	var matcher = $(".colmnname").length;
 	
 var data = {
 action: 'ind_decrementor',
@@ -82,6 +104,11 @@ $('.removelastcolumn').show();
 }
 });
 
+if (matcher==number) {
+$(".colmnname:last").remove();
+$(".colmnecolor:last").remove();
+}
+$(".messager-line:first").remove();
 $("#parenttable tbody:last").remove();
 $("tbody:empty").remove();
 });
@@ -118,4 +145,7 @@ $('#indbuttonbgdefbottom_color').wpColorPicker();
 $('#indbuttonbgtophover_color').wpColorPicker();
 $('#indbuttonbgbottomhover_color').wpColorPicker();
 $('#indbuttontext_color').wpColorPicker();
+
+$('.colmcolordiftop').wpColorPicker();
+$('.colmcolordifbottom').wpColorPicker();
 });

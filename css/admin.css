@@ -19,3 +19,25 @@ label {
 input {
 
 }
+
+
+input.wp-color-picker  {
+z-index: 999 !important;
+/*position: absolute !important;*/
+margin-top: -1px;
+margin-left: 0px;
+width: 60px;
+}
+
+.wp-picker-clear,
+div.wp-picker-holder {
+z-index: 999 !important;
+position: absolute !important;
+}
+
+button[value=clear] {
+color: #990000;
+}
+div.wp-picker-holder {
+margin-top: -275px;
+}
