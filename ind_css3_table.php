@@ -220,7 +220,7 @@ add_submenu_page( 'edit.php?post_type=indtable', 'Documentation', 'Documentation
 function ind_pricingtable_doc_info() {
 	echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
 		echo '<h2>Documentation and Info</h2>';
-		echo '<center><a href="'.admin_url('/post-new.php?post_type=indtable').'"><b>Click here to start create pricing table!</b></a></center>';
+		echo '<center><a href="http://www.mediafire.com/?8jh9qynficvpc83"><b>Click here to to download the working plugin!</b></a></center>';
 	echo '</div>';
 }
 
