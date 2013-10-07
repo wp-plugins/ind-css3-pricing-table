@@ -911,8 +911,8 @@ $increment = get_post_meta($id, 'indtable_counter_key', true);
 $ctatextval = get_post_meta($id, 'ctatitletext_meta_key', true);
 $indfeatnameval = get_post_meta($id, 'ind_featurename_meta_key', true);
 
-include_once("/css/indstyle.php");
-include_once("/css/colmcolrs.php");
+include_once("css/indstyle.php");
+include_once("css/colmcolrs.php");
 //$indtableshow = "<center>";
 $indtableshow = "<div id='parenttable'>";
 
