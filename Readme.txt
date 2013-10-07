@@ -129,7 +129,7 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 = 2.1 - 07 Oct 2013 =
 
-Fixing failure inclusion than throwing php error message
+Fixing failure inclusion that throwing php error message
 
 = 2.0 - 19 September 2013 =
 - Add color option for each column
