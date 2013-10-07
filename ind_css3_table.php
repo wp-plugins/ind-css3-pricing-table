@@ -110,7 +110,7 @@ function enqueue_indtable_ajax($hook) {
   if (is_admin() && $typenow=='indtable') {
     if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
 
-    wp_enqueue_script( 'indtable_ajax_script', plugins_url('/ind_css3_pricing_table/js/indajax.js'),
+    wp_enqueue_script( 'indtable_ajax_script', plugins_url('/ind-css3-pricing-table/js/indajax.js'),
 		array('jquery'));
 	wp_localize_script('indtable_ajax_script', 'indtable_ajax_script_vars', array (
 	'ind_ajax_nonce' => 'wp_create_nonce("ind-nonce-string")'
@@ -118,38 +118,6 @@ function enqueue_indtable_ajax($hook) {
 	}
 	}
 //	wp_enqueue_script('indtable_ajax_script');
-}
-
-function enqueue_indtable_jquery_colorPicker_min($hook) {
-  global $pagenow, $typenow;
-
-  if (empty($typenow) && !empty($_GET['post'])) {
-    $post = get_post($_GET['post']);
-    $typenow = $post->post_type;
-  }
-  if (is_admin() && $typenow=='indtable') {
-    if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
-
-    wp_enqueue_script( 'indtable_jquery_colorPicker_minscript', plugins_url('/ind_css3_pricing_table/js/jquery.minicolors.min.js'),
-		array('jquery'));
-	}
-	}
-}
-
-function enqueue_indtable_jquery_colorPicker($hook) {
-  global $pagenow, $typenow;
-
-  if (empty($typenow) && !empty($_GET['post'])) {
-    $post = get_post($_GET['post']);
-    $typenow = $post->post_type;
-  }
-  if (is_admin() && $typenow=='indtable') {
-    if ($pagenow=='post-new.php' || $pagenow=='post.php') { 
-
-    wp_enqueue_script( 'indtable_jquery_colorPicker_script', plugins_url('/ind_css3_pricing_table/js/jquery.minicolors.js'),
-		array('jquery'));
-	}
-	}
 }
 
 
@@ -234,19 +202,14 @@ function enqueue_indtable_style( $hook ) {
   }
   if (is_admin() && $typenow=='indtable') {
     if ($pagenow=='post-new.php' || $pagenow=='post.php') {
-    wp_register_style( 'indtable_ajax_style', plugins_url('/ind_css3_pricing_table/css/admin.css') );
+    wp_register_style( 'indtable_ajax_style', plugins_url('/ind-css3-pricing-table/css/admin.css') );
 	wp_enqueue_style('indtable_ajax_style');
 	}
   }
 }
 
-function enqueue_indtable_latex_style( $hook ) {
-    wp_register_style( 'indtable_latex_style', plugins_url('/ind_css3_pricing_table/css/jquery.minicolors.css') );
-	wp_enqueue_style('indtable_latex_style');
-}
-
 function front_end_table_style() {
-   wp_register_style( 'indtable_css_style', plugins_url('/ind_css3_pricing_table/css/indshow.css') );
+   wp_register_style( 'indtable_css_style', plugins_url('/ind-css3-pricing-table/css/indshow.css') );
 	wp_enqueue_style('indtable_css_style');
 }
 
@@ -319,7 +282,7 @@ endif;
 <input type="hidden" name="postid" class="postidclass" value="<?php echo $post->ID; ?>" />
 <button class="removelastcolumn">Remove Column</button>
 <br/><br/>
-<div style="display: none; class="loading" id ="ind_loading"> <b>Processing...</b> <br/> <img src="<?php echo plugins_url('/ind_css3_pricing_table/img/ajax-loader.gif');?>" margin: 10px 0 0 0;"/></div>
+<div style="display: none; class="loading" id ="ind_loading"> <b>Processing...</b> <br/> <img src="<?php echo plugins_url('/ind-css3-pricing-table/img/ajax-loader.gif');?>" margin: 10px 0 0 0;"/></div>
 <table id="parenttable">
 
 <?php
@@ -948,8 +911,8 @@ $increment = get_post_meta($id, 'indtable_counter_key', true);
 $ctatextval = get_post_meta($id, 'ctatitletext_meta_key', true);
 $indfeatnameval = get_post_meta($id, 'ind_featurename_meta_key', true);
 
-include_once("/css/indstyle.php");
-include_once("/css/colmcolrs.php");
+include_once("css/indstyle.php");
+include_once("css/colmcolrs.php");
 //$indtableshow = "<center>";
 $indtableshow = "<div id='parenttable'>";
 
@@ -993,7 +956,7 @@ $indbuttonval = get_post_meta($id, $indbuttonkey, true);
 
 if ($indribbonval != 'None') :
 $url = plugins_url();
-$path = '/ind_css3_pricing_table/img/';
+$path = '/ind-css3-pricing-table/img/';
 else :
 $url = '';
 $path = '';
@@ -1047,10 +1010,7 @@ if (is_admin()) :
 add_action( 'init', 'ind_pricing_table_table', 0 );
 //add_action('admin_enqueue_scripts', 'ind_load_wpjquery');
 add_action( 'admin_enqueue_scripts', 'enqueue_indtable_ajax' );
-add_action('admin_enqueue_scripts', 'enqueue_indtable_jquery_colorPicker_min');
-add_action('admin_enqueue_scripts', 'enqueue_indtable_jquery_colorPicker');
 add_action( 'admin_enqueue_scripts', 'enqueue_indtable_style' );
-add_action( 'admin_enqueue_scripts', 'enqueue_indtable_latex_style' );
 add_action('add_meta_boxes', 'indtable_meta_hook');
 add_filter( 'manage_edit-indtable_columns', 'wp_edit_indtable_columns' );
 add_action( 'manage_indtable_posts_custom_column', 'wp_manage_indtable_columns', 10, 2 );
