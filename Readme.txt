@@ -4,7 +4,7 @@ Donate link: http://ctuts.com/contact/
 Tags: pricing table, css3, table, pricing, shortcode
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,6 +126,10 @@ If you have another question/s regarding this wp plugin, then please post your q
 6. 3 columns
 
 == Changelog ==
+
+= 2.1 - 07 Oct 2013 =
+
+Fixing failure inclusion than throwing php error message
 
 = 2.0 - 19 September 2013 =
 - Add color option for each column
