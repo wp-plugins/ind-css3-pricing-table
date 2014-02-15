@@ -127,7 +127,7 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 == Changelog ==
 
-= 2.2 - 19 December 2013 =
+= 2.2 - 16 February 2014 =
 - Adding HTML input support for "Feature" field.
 
 = 2.1 - 19 December 2013 =
