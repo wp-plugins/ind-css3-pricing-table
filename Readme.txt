@@ -127,6 +127,10 @@ If you have another question/s regarding this wp plugin, then please post your q
 
 == Changelog ==
 
+
+= 2.2.1 - 02 March 2014 =
+- Fixing broken Admin layout on Wordpress version 3.8.1.
+
 = 2.2 - 16 February 2014 =
 - Adding HTML input support for "Feature" field.
 
